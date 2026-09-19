@@ -5,7 +5,7 @@ A real-time secure chat application built with Node.js, Express, Socket.io, and 
 ---
 
 ## 📹 Video Demonstration
-📺 Watch the full demonstration on YouTube: [https://youtu.be/IO6YnPv4H0U](https://youtu.be/IO6YnPv4H0U)
+📺 Watch the full demonstration on YouTube: [Watch on YouTube](https://youtu.be/lO6YnPv4H0U)
 
 ---
 
