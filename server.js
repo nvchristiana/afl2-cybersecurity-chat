@@ -1,29 +1,31 @@
 const http = require("http");
+const express = require("express");
 const socketIo = require("socket.io");
+const path = require("path");
 
-const server = http.createServer();
+const app = express();
+const server = http.createServer(app);
 const io = socketIo(server);
+
+app.use(express.static(path.join(__dirname, "public")));
 
 const users = new Map();
 
 io.on("connection", (socket) => {
   console.log(`Client ${socket.id} connected`);
 
-  // Kirim daftar user beserta public key mereka ke client baru
   socket.emit("init", Array.from(users.entries()));
 
   socket.on("registerPublicKey", (data) => {
     const { username, publicKey } = data;
     users.set(username, publicKey);
     console.log(`${username} registered with public key.`);
-
     io.emit("newUser", { username, publicKey });
   });
 
   socket.on("message", (data) => {
-    const { username, targetUsername, message, isEncrypted } = data;
-    // Broadcast pesan ke seluruh client
-    io.emit("message", { username, targetUsername, message, isEncrypted });
+    const { username, targetUsername, message, isEncrypted, hash, signature } = data;
+    io.emit("message", { username, targetUsername, message, isEncrypted, hash, signature });
   });
 
   socket.on("disconnect", () => {
@@ -33,5 +35,5 @@ io.on("connection", (socket) => {
 
 const port = 3000;
 server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running on http://localhost:${port}`);
 });
